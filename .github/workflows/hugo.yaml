@@ -50,12 +50,18 @@ jobs:
         uses: actions/configure-pages@v3
       - name: Install Node.js dependencies
         run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Generate hugo
+        run: "python generate.py"
       - name: Build with Hugo
         env:
           # For maximum backward compatibility with Hugo modules
           HUGO_ENVIRONMENT: production
           HUGO_ENV: production
         run: |
+          cd hugo && \
           hugo \
             --gc \
             --minify \
